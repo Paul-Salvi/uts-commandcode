@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -File .commandcode/hooks/Update-PhaseVerification.ps1",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "powershell",
+      "Shell(npm:*)",
+      "Shell(docker:*)",
+      "Shell(dotnet:*)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

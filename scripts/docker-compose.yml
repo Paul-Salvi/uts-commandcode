@@ -1,0 +1,29 @@
+services:
+  uts-ui:
+    build:
+      context: ../uts-ui
+      dockerfile: Dockerfile
+      args:
+        - API_BASE_URL=http://uts-api:8080
+        - NEXT_PUBLIC_APP_NAME=Spun PS Pay
+        - NEXT_PUBLIC_APP_VERSION=${APP_VERSION:-0.1.1}
+    container_name: uts-ui
+    ports:
+      - "8000:3000"
+    environment:
+      - NODE_ENV=production
+      - API_BASE_URL=http://uts-api:8080
+    depends_on:
+      - uts-api
+
+  uts-api:
+    build:
+      context: ../UTS/src
+      dockerfile: UTS.Host.API/Dockerfile
+    container_name: uts-api
+    ports:
+      - "8001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__DefaultConnection=Host=host.docker.internal;Port=5432;Database=UTS;Username=uts_user;Password=Pay123#
