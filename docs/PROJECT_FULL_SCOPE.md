@@ -23,6 +23,18 @@ auditable record of everything sent.
 - **Auditability**: every delivery is timestamped, logged, and reconstructable for a regulator
   or a client dispute
 
+### Architecture: Three Verticals
+
+Every feature area below (Sections 3-9) maps to one of three verticals, matching the MVP's
+module structure in `PROJECT.md` Section 1a. This mapping is the reason the MVP can grow into
+this full scope without a rewrite — each vertical just gets deeper, the boundaries don't move.
+
+| Vertical | Full-scope sections |
+|---|---|
+| **1. Data Imports** | 3 (Model Generation & Management) |
+| **2. Sponsor & Delivery Config** | 4 (Sponsor Management), portions of 6 (Compliance rule config) |
+| **3. Distribution Service** | 5 (Delivery & Distribution), 6.2-6.3 (runtime compliance checks), 7 (Corporate Actions), 8 (Reporting), 9 (Platform Operations) |
+
 ---
 
 ## 2. Business Objectives

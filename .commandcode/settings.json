@@ -17,7 +17,18 @@
       "powershell",
       "Shell(npm:*)",
       "Shell(docker:*)",
-      "Shell(dotnet:*)"
+      "Shell(dotnet:*)",
+      "Shell(curl -s -o NUL -w \"%%{http_code}\" http://localhost:8001/health)",
+      "Shell(powershell -Command \"Get-Content 'C:\\Users\\plslv\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\10.0.3\\npgsql.entityframeworkcore.postgresql.nuspec' | Select-String -Pattern 'Microsoft.EntityFrameworkCore' | Select-Object -First 10\")",
+      "Shell(node -e \"const p=require('./package.json'); console.log('deps:', JSON.stringify(p.dependencies)); console.log('devDeps:', JSON.stringify(p.devDependencies))\")",
+      "Shell(node -e \"try{require.resolve('@tailwindcss/postcss');console.log('resolves OK')}catch(e){console.log('MISSING:',e.message)}\")",
+      "Shell(node -e try{require.resolve('@tailwindcss/postcss');console.log('resolves OK')}catch(e){console.log('MISSING:',e.message)})",
+      "Shell(dir:*)",
+      "Shell(node --version)",
+      "Shell(findstr:*)",
+      "Shell(npm install @tailwindcss/postcss@4.3.3 --save-dev --loglevel verbose > npm-verbose.log 2>&1)",
+      "Shell(node -e \"try{require.resolve('@tailwindcss/postcss');console.log('postcss: resolves OK')}catch(e){console.log('postcss MISSING:',e.message)}; try{require.resolve('tailwindcss');console.log('tailwind: resolves OK')}catch(e){console.log('tailwind MISSING:',e.message)}\")",
+      "Shell(del npm-verbose.log 2>NUL & rmdir /s /q .npm-cache-tmp 2>NUL & rmdir /s /q .fresh-cache 2>NUL & echo cleaned)"
     ],
     "deny": [],
     "defaultMode": "default"
