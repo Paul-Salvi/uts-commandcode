@@ -1,86 +1,85 @@
-# Implementation Plan
+# Implementation Plan — 4-Day Full-Time Sprint
 
 **Reference docs**: `PROJECT.md` (MVP scope) · `PROJECT_FULL_SCOPE.md` (target state) · `AGENTS.md` (build discipline)
 
-**Assumption**: 10-20 hrs/week, solo, SMArtX API experience already in hand.
+**Assumption**: full-time, ~10-12 hrs/day, solo, using Command Code as the build agent.
 
 ---
 
-## Step 0 — Before any code (do this first, not in parallel)
+## Good news on this version of the plan
 
-This isn't optional and it isn't step 1 alongside building — it comes strictly before.
+Cutting delivery down to **File (manual download) only** — no SFTP, no SMB, no per-sponsor API
+integration — removes the one real external dependency (SMArtX sandbox access) and the most
+time-consuming subsystems (credential storage/encryption, SFTP/SMB clients, API adapters) from
+the MVP entirely. This isn't a compromise forced by the timeline — it was the right cut anyway,
+since it still solves the actual validated pain point (manual reformatting) without also solving
+manual sending, which can wait for real customer demand. 4 days is a realistic target for this
+version, not an optimistic one.
 
-- [ ] Send the 15-20 outreach emails to the SMArtX boutique-firm list
-- [ ] Get on 3-5 calls, ask how they currently push model updates, listen for the pain pattern
-- [ ] Go/no-go decision: do at least 2-3 firms independently describe the exact pain this tool solves? If not, revisit before building.
-
-**Do not proceed to Week 1 until this step has real signal.** Everything below assumes it did.
-
----
-
-## Weeks 1-2 — Vertical 1: Data Imports (thin slice)
-
-Goal: a strategist can upload a file and get back a validated, normalized model.
-
-- [ ] `security` and `model` / `model_weight` tables (see `PROJECT.md` Section 3)
-- [ ] CSV/Excel parser — accept the two formats you're most likely to actually receive from your first validation calls (ask on the calls, don't guess)
-- [ ] Validation rules: weights sum to ~100% (configurable tolerance), ticker resolution against `security`, duplicate detection
-- [ ] Specific, row-level error messages on failed validation
-- [ ] Basic auth (`strategist_user` table, login) — just enough to scope data per firm
-
-**Definition of done**: you can upload a real (or realistic sample) CSV and see it land in the database as clean rows, or get a readable rejection reason.
+The one thing that still doesn't compress: **a real customer using it** depends on outreach
+responses, not build speed. Treat "working, deployed tool" as the Day 4 goal — a live paying
+customer is a separate, parallel-track outcome.
 
 ---
 
-## Weeks 3-4 — Vertical 2: Sponsor & Delivery Config (thin slice)
+## Day 1 — Vertical 1: Data Imports, all the way through
 
-Goal: SMArtX connection details exist as configuration, not hardcoded secrets sprinkled through the codebase.
+- [ ] All 7 MVP tables (`PROJECT.md` Section 3) — create the full schema once, not incrementally
+- [ ] CSV/Excel upload + parser
+- [ ] Validation: weight tolerance, ticker resolution, duplicates, row-level error messages
+- [ ] Basic auth/login scoped per firm
 
-- [ ] `sponsor_connection` table, encrypted credential storage
-- [ ] SMArtX API auth flow — this is the part your prior experience shortens significantly
-- [ ] `delivery_schedule` table — manual-only is fine to start (`cron_expression` can stay null for every row in week 3-4)
-- [ ] Simple settings screen: enter/update SMArtX credentials
-
-**Definition of done**: credentials are stored encrypted, retrievable by the app, and you can make one successful authenticated test call to SMArtX's API using stored config — not hardcoded values.
+**Definition of done**: upload a real CSV, get back clean rows in the DB or a specific rejection reason.
 
 ---
 
-## Weeks 5-6 — Vertical 3: Distribution Service (thin slice)
+## Day 2 — Vertical 2: Sponsor & Delivery Config
 
-Goal: close the loop — take a validated model, push it to SMArtX, log the result.
+- [ ] `sponsor` table (name only — no credentials, no delivery_method column needed yet)
+- [ ] `file_format_config` table + the format wizard UI: file type (CSV/Excel), column mapping, decimal places, one-file-per-model toggle, naming pattern
+- [ ] `delivery_schedule` table — manual-only is fine to start (`cron_expression` null)
 
-- [ ] `delivery_log` table
-- [ ] Manual "send now" flow: model + sponsor_connection → SMArtX API call → log request/response/status
-- [ ] Delivery history view (even a plain table on a page is fine — no dashboard polish yet)
-- [ ] Email notification on success/failure
-- [ ] Basic scheduled delivery (cron job checking `delivery_schedule` rows)
-
-**Definition of done**: a full end-to-end cycle — upload CSV, validate, click send, see it land in SMArtX (sandbox or real), see the log entry, get the email.
+**Definition of done**: create a sponsor, configure its file format, and see the config persist correctly.
 
 ---
 
-## Week 7 — Dogfood + first real customer
+## Day 3 — Vertical 3: Distribution Service
 
-- [ ] Run your own test data through the full flow end to end, multiple times, deliberately trying to break it (bad CSV, expired credentials, SMArtX downtime)
-- [ ] Go back to whichever call-back firm showed the most interest in Step 0 — offer them the actual tool
-- [ ] Get one real firm delivering one real model through it
+- [ ] File generation engine: take a validated model (Vertical 1) + a sponsor's `file_format_config` (Vertical 2) → render CSV or Excel with the mapped columns, correct decimals, correct naming
+- [ ] `delivery_log` table — log every generation attempt (success or failure), with file name/path
+- [ ] "Generate now" flow with a download link on success
+- [ ] Generation history view (plain table is fine)
+- [ ] Basic scheduled generation (cron) + email notification when a scheduled file is ready
 
-**Definition of done**: 1 paying or pilot customer using the tool for a real delivery, not a demo.
+**Definition of done**: full end-to-end cycle — upload a model, configure a sponsor's format, click generate, download a correctly formatted file, see the log entry.
 
 ---
 
-## After Week 7 — Do not pre-build Phase 2/3
+## Day 4 — Harden, dogfood, deploy
 
-Per `PROJECT.md` Section 6 and `AGENTS.md`'s Scope Discipline section: the next feature you build should be whatever your first 1-3 real customers actually ask for, pulled from `PROJECT_FULL_SCOPE.md`'s menu — not built ahead of demand. Common first asks worth watching for:
+- [ ] Deliberately break it: malformed CSV, a sponsor format with unusual column counts, empty model — confirm each produces a specific log entry and readable message, not a silent failure
+- [ ] Deploy to a low-cost host (Render/Railway/Fly.io)
+- [ ] Connect the landing page's email capture to something real, if not done already
+- [ ] Run the full flow yourself, twice, on the deployed version — not just localhost, and actually open the generated CSV/Excel file to confirm it looks right
 
-- A second sponsor platform → Vertical 2 gets a second `sponsor_connection` type, Vertical 3 gets a second delivery adapter
-- SFTP or email delivery (sponsor without a usable API) → new delivery channel in Vertical 3 only — Verticals 1 and 2 shouldn't need to change
-- A real dashboard instead of a plain history table → Vertical 3, presentation layer only
+**Definition of done**: a deployed, working tool you could hand to a real pilot user today.
 
-If a request doesn't map cleanly onto one vertical without touching the others, that's worth pausing on — it may mean the boundary needs rethinking, not just more code.
+---
+
+## After Day 4 — Phase 2 is demand-driven, not pre-built
+
+Per `AGENTS.md` Scope Discipline: the next feature is whatever a real pilot user asks for. The
+most likely first ask, based on everything scoped so far, is **"can this just send the file for
+me"** — that's SFTP (Section 5 of `PROJECT_FULL_SCOPE.md`), and it's the natural Phase 2 build
+once a real customer confirms file generation alone isn't enough. Don't build it before someone
+asks, even though it's an easy guess for what they'll want.
 
 ---
 
 ## Time Check
 
-7 weeks at 10-20 hrs/week is roughly 70-140 hours to a working MVP with one real customer. That's the target to hold yourself to — if any single vertical is running more than 2 weeks over, that's a signal you've let scope creep in from the full-scope doc. Go back to the "MVP-thin slice" column in `PROJECT.md` Section 1a and cut back to it.
+This version's scope genuinely fits full-time in 4 days without the timeline risk the SMArtX-integrated
+version carried. If Day 3 (the file generation engine) runs long, that's the one place worth
+watching — column mapping edge cases (mismatched counts, wrong types) are where "simple" wizards
+quietly grow. Keep the format config to exactly what's in `PROJECT.md` Section 2.3 — no per-column
+decimal overrides, no live preview — those are explicitly Phase 2.

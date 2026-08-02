@@ -46,12 +46,7 @@ See [ui/taste.md](ui/taste.md)
 - Allow fee rules (ruleType, value, currency, effectiveFrom) to be configured inline during provider creation, not added as a separate post-creation step. Confidence: 0.65
 
 # nextjs
-- When passing arrays of objects to Next.js server actions, serialize to JSON string (`JSON.stringify`) and parse server-side to avoid `[Object]` serialization corruption. Confidence: 0.70
-- Fetch initial data (dropdowns, selectors, form dependencies) server-side in the page component and pass as props to the client component — do not fetch them client-side via `useQuery` on mount, because they won't be ready when the component first renders. Confidence: 0.80
-- Prefer server actions over client-side `fetch()` through Next.js rewrites when calling internal backend APIs — server actions call the backend directly via `process.env.API_BASE_URL` and are more reliable because they don't depend on rewrite configuration or Docker networking between the Next.js runtime and the backend. Confidence: 0.75
-- When `next.config.ts` reads an environment variable at build time (e.g., `API_BASE_URL` for rewrite targets), setting it as a container runtime `environment:` in docker-compose is insufficient — the variable must be passed as a Docker build arg. Add `ARG VAR_NAME` + `ENV VAR_NAME=$VAR_NAME` in the Dockerfile build stage AND `build.args` in docker-compose.yml. Otherwise the Next.js build silently bakes in the default (usually `localhost`), breaking inter-container networking. Confidence: 0.85
-- The project's pinned Next.js version has breaking changes vs. the model's training data — APIs, conventions, and file structure may all differ. Before writing any Next.js code, read the relevant guide bundled in `node_modules/next/dist/docs/` and heed deprecation notices; do not rely on training-data knowledge of Next.js. Confidence: 0.80
-
+See [nextjs/taste.md](nextjs/taste.md)
 # feature-removal
 - When removing a feature that spans multiple projects (backend, frontend, mocks, Postman), proactively grep for ALL references to the deleted types across ALL layers — domain entities, service interfaces/DTOs/mappers/validators, persistence (EF entities, repositories, DI registrations, DbContext), API controllers, frontend features/routes/public pages, proxy/middleware route gates, sidebar navigation, audit log filter options, commission/analytics queries that reference the deleted feature, Postman collection endpoints/variables, **and project documentation (README, AGENTS.md, etc.)**. A thorough deletion leaves no dangling imports, broken builds, stale UI references, or outdated docs. Confidence: 0.88
 - When deleting an entire feature folder from the frontend, check if other features import shared utility files from that folder (e.g., a `resolvePayInPage.ts` used by a different page). Re-create the shared utility in the surviving feature's folder rather than deleting it with the removed feature — or the build will break. Confidence: 0.80
@@ -88,13 +83,11 @@ See [docker/taste.md](docker/taste.md)
 - For public-facing payment/checkout pages that handle money, proactively implement layered security without being asked: short-lived session tokens (30-min TTL with countdown display), idempotency keys to prevent double-charge, per-endpoint rate limiting (stricter limits on mutation endpoints like payment start), origin/referer header validation, signed input tokens, HSTS/CSP/X-Frame-Options headers, and webhook signature verification for provider callbacks. Treat these as defaults, not negotiable features. Confidence: 0.85
 - Origin/referer header validation should be permissive when headers are absent: only reject requests where the Origin or Referer header IS present but doesn't match the allowed origins. Server-to-server calls (Next.js server actions, cURL, mobile SDKs, webhook clients) do not send browser origin headers and must be allowed through. A validation that rejects requests with no origin/referer header will silently break all server-side consumers. Confidence: 0.85
 - When real credentials are found committed to git (e.g., a DB password in appsettings.json), treat it as a blocking issue: scrub the values to placeholders pointing at env vars/user-secrets so the code is safe going forward. Do NOT purge git history or rotate the secret autonomously — flag rotation and history cleanup as the user's decision. Confidence: 0.65
+- Login/auth endpoints must return a single generic error for both unknown email and wrong password (e.g., "Invalid email or password") so the response never reveals whether an account exists — no user enumeration. Confidence: 0.8
+- Sensitive integration credentials (e.g., sponsor platform API keys/secrets) must be encrypted at rest: AES-256-GCM with the key from configuration/env, nonce prepended to the ciphertext, stored base64; API responses must never return the credentials (only a `hasCredentials` flag). Decryption failure (e.g., rotated key) should surface a clear, actionable error. Confidence: 0.7
 
 # implementation-pattern
-- When the user selects named sections from a categorized plan (e.g., "Modern checkout UX" and "Trust signals"), implement ALL items within those sections in one cross-layer pass (frontend + backend) — do not ask for further step-by-step approval on individual sub-items within a named section the user already endorsed. Confidence: 0.85
-- When adding a new field to a backend DTO/record that is displayed in frontend UI, propagate it through ALL layers in the same coordinated pass: backend DTO definition → frontend TypeScript type → frontend response parser/extractor → UI component display → adjust CSS layout (grid columns, spacing, width) to accommodate the new element. Do not land a backend change and leave the frontend parsing it as an opaque blob or breaking layout. Confidence: 0.80
-- When implementing checkout/payment flow UI improvements, apply both layers in parallel: backend changes (security, API, DTOs) and frontend changes (components, actions, pages) in the same pass — the user expects a coordinated ship, not separate frontend/backend phases. Confidence: 0.80
-- When a brainstorm plan identifies "quick wins" (low-effort, high-impact items), implement them immediately alongside the primary feature work, not deferred to a separate follow-up task. Quick wins include: passing callback URLs to providers, adding idempotency keys, origin validation, stricter rate limiting, trust indicators, countdown timers, replacing insecure storage (sessionStorage), progress indicators, success animations, skeleton loading, and security headers middleware. Confidence: 0.80
-
+See [implementation-pattern/taste.md](implementation-pattern/taste.md)
 # webhooks
 - When implementing a webhook endpoint for an external payment provider, include: a webhook signature verification method on the provider interface (HMAC-SHA256 with `CryptographicOperations.FixedTimeEquals` for constant-time comparison), a `GetByExternalPaymentIdAsync` repository method (or equivalent) to look up the local record by the provider's payment ID, signature verification in the webhook handler that skips validation only when no secret is configured (dev mode), and automatic settlement/follow-on logic triggered on completion status within the webhook handler itself. Confidence: 0.85
 
@@ -110,11 +103,14 @@ See [docker/taste.md](docker/taste.md)
 # api-integration
 - When comparing string status/enum values returned from a backend API against expected values in frontend code, always normalize both sides to lowercase (`.toLowerCase()`) before comparing. Backend casing (e.g., `"Completed"`) can differ from frontend expectations (`"completed"`), causing silent comparison failures on check-status or polling flows. Confidence: 0.75
 
+# api-contract
+- Prefer JSON request/response bodies for APIs over file uploads — no `multipart/form-data`, no `IFormFile`. When a feature must ingest CSV/Excel files, parse them on the client side and POST the parsed rows as JSON, keeping file handling out of the API entirely. The user explicitly demanded this: "it should be json request and response and no files in api." Confidence: 0.9
+
 # api-pagination
 - Paginated list endpoints should accept `page`, `pageSize`, `status`, `search` query params and return `{ records, totalCount, page, pageSize }`. Apply server-side filtering (by status, search text) in the repository layer via LINQ `Where` clauses before applying skip/take pagination — do not fetch all rows from the database just to paginate on the client. Confidence: 0.80
 
 # api-routing
-- When adding new ASP.NET Core API route templates, match the casing convention of existing controllers in the project — if existing routes use PascalCase (e.g., `api/PlatformUsers/...`), new controllers should use PascalCase too, not kebab-case (`api/platform-users/...`). Don't rely on ASP.NET Core's default case-insensitive routing; the configuration can make it case-sensitive, causing silent 404s with 0ms response times. Confidence: 0.80
+- When adding new ASP.NET Core API route templates, match the casing convention of existing controllers in the project — if existing routes use PascalCase (e.g., `api/PlatformUsers/...`), new controllers should use PascalCase too, not kebab-case (`api/platform-users/...`). Don't rely on ASP.NET Core's default case-insensitive routing; the configuration can make it case-sensitive, causing silent 404s with 0ms response times. This bit a real endpoint this session: `api/sponsor-connections` 404'd until the frontend was aligned to the actual `api/SponsorConnections` route. Confidence: 0.88
 - When resolving the authenticated user's ID from JWT claims in a controller, grep existing controllers to confirm which claim the app actually uses (this codebase stores the user ID in `ClaimTypes.NameIdentifier`, not the standard `"sub"` claim) and follow that convention — reading a claim the app never emits (e.g., `"sub"`) silently returns null and produces 401s. Verify data exists in the DB before redeploying to confirm the root cause is the claim, not missing data. Confidence: 0.80
 - Place literal/static route segments (e.g., `[HttpGet("records")]`) BEFORE parameterized route segments (e.g., `[HttpGet("{slug}")]`) in the same controller. ASP.NET Core matches routes top-to-bottom and `{slug}` will catch static path values like "records", returning 404 when the expected resource isn't found. Confidence: 0.85
 - When building a read-only records view, provide a dedicated aggregated backend endpoint (e.g., `GET /api/pay-in/records`) that collects data server-side, rather than making the frontend orchestrate multiple API calls to individual resources. This keeps the frontend thin and avoids per-resource authorization issues. Confidence: 0.70
@@ -133,3 +129,9 @@ See [docker/taste.md](docker/taste.md)
 
 # docs
 See [docs/taste.md](docs/taste.md)
+ation
+- When diagnosing a UI bug category (e.g., "unnecessary scroll", layout issues), present findings as a structured report with: numbered findings tables (Page/Component, Viewport, Scroll Type, Root Cause, Severity, Fix Direction), an "Uncertain / Needs a Decision" section for ambiguous items, and a severity-priority summary — then let the user confirm before implementing fixes. Confidence: 0.80
+
+# docs
+See [docs/taste.md](docs/taste.md)
+d](docs/taste.md)

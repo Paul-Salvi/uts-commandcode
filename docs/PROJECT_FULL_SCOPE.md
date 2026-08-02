@@ -109,6 +109,10 @@ account's size while preserving allocation integrity.
 ### 4.2 Sponsor-Specific Format Generation
 - Support CSV, XML, fixed-width, and JSON output, configurable per sponsor
 - Validate generated output against the sponsor's documented spec before sending, not after
+- **Format wizard** (MVP starts here, per Section 5.1): file type (CSV/Excel), column mapping
+  (internal field → sponsor's expected column name and order), decimal places, one-file-per-model
+  vs. combined file, and file naming pattern — this is shared across File/SFTP/SMB delivery,
+  since all three need the same generated file and only differ in what happens to it after
 
 ### 4.3 Delivery Calendar
 - Per-sponsor delivery schedule, respecting market holidays and sponsor-specific blackout
@@ -120,12 +124,18 @@ account's size while preserving allocation integrity.
 ## 5. Feature Area: Model Delivery & Distribution
 
 ### 5.1 Delivery Channels
-Support whatever channel a given sponsor requires:
-- REST API (the common case for modern TAMPs)
-- SFTP
-- Secure email with encrypted attachment
-- SMB / shared network folder, only if a specific sponsor genuinely requires it (this is the
-  least common channel among modern TAMPs but still shows up with legacy sponsor systems)
+Support whatever channel a given sponsor requires, phased by build cost — not all four are equal
+effort. File, SFTP, and SMB all share one file-generation/formatting engine and only differ in
+the last step (download vs. push); API is fundamentally different and requires a per-sponsor
+code adapter, since there's no generic way to configure an arbitrary sponsor's API from a form.
+
+- **File (manual download)** — MVP. Generated file appears as a download link, user sends it
+  however they currently do. No credentials, no transport code required.
+- **SFTP** — Phase 2. Host/port/credentials/remote path, with a **test connection** action that
+  actually authenticates before the config can be saved
+- **SMB** — Phase 2, only if a real sponsor requires it (uncommon among modern TAMPs)
+- **REST API** — Phase 2+, one adapter per sponsor (starting with SMArtX given existing
+  integration knowledge) — budget real engineering time per sponsor, this is not a config wizard
 
 ### 5.2 Scheduled + On-Demand Delivery
 - Scheduled deliveries run automatically within a configured time window

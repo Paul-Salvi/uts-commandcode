@@ -146,3 +146,10 @@ Route files under `/app` import from `/features` — they compose and route, the
 - Did new backend-facing code use the generated `lib/api-client.ts` client rather than a hand-rolled fetch call?
 - Did you run lint, typecheck, and the build - not just write the code?
 - Does this need tests? If so, hand it to `react-test-specialist` rather than writing them yourself.
+
+
+<!-- BEGIN:nextjs-agent-rules -->
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+<!-- END:nextjs-agent-rules -->

@@ -27,3 +27,5 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__DefaultConnection=Host=host.docker.internal;Port=5432;Database=UTS;Username=uts_user;Password=Pay123#
+      - Jwt__Key=dev-jwt-signing-key-change-me-0123456789abcdef
+      - Encryption__Key=hl0GUrIlZn2fLNl6AB159jxHp1aM9sflNb34EL/ektg=

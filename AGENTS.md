@@ -37,10 +37,11 @@ project is scope creep back toward the full enterprise doc before there are payi
 
 - Single Postgres database for MVP — no data warehouse, no separate analytics store until
   Phase 2+ demands it (see @PROJECT_FULL_SCOPE.md Section 9.4)
-- One sponsor integration (SMArtX API) for MVP — do not build a generic multi-sponsor adapter
-  framework until there's a second sponsor to actually integrate
-- Every delivery attempt (success or failure) must be logged to `delivery_log` — this is the
-  core value proposition of the product, not an optional feature
+- Delivery is file-generation-only for MVP — no SFTP, SMB, or API integration (including
+  SMArtX). A sponsor is just a name + a file-format config. Do not add credential storage or
+  a delivery transport layer until Phase 2 (see @PROJECT.md Section 5)
+- Every file generation attempt (success or failure) must be logged to `delivery_log` — this is
+  the core value proposition of the product, not an optional feature
 - Static models only for MVP — dynamic/rule-driven models are explicitly out of scope until
   Phase 2 (see @PROJECT_FULL_SCOPE.md Section 3.3-3.4)
 
@@ -52,9 +53,3 @@ job locally, running tests). Placeholder until then:
 - `# TODO: add db migration command`
 - `# TODO: add local dev server command`
 - `# TODO: add test command`
-
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
