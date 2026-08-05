@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Ledger (uts-ui) - Checkup Report</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<style>
+		body { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+		.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+		.report-section { border: 1px solid #222226; background: #0a0a0b; position: relative; }
+		.corner-box { position: absolute; width: 20px; height: 20px; border: 1px solid #222226; background: #000; }
+	</style>
+</head>
+<body class="bg-black text-[#fafafa]">
+	<main class="mx-auto w-full max-w-6xl px-5 py-8 md:px-10 md:py-12">
+		<header class="report-section mb-8 p-6 md:p-8">
+			<div class="corner-box left-0 top-0 -translate-x-1/2 -translate-y-1/2"></div>
+			<div class="corner-box right-0 top-0 translate-x-1/2 -translate-y-1/2"></div>
+			<div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+				<div>
+					<div class="mono mb-2 text-xs tracking-widest text-[#666]">// CHECKUP</div>
+					<h1 class="text-4xl font-bold tracking-tight md:text-6xl">Ledger — uts-ui</h1>
+				</div>
+				<div class="mono text-left text-xs text-[#666] md:text-right">
+					<div>COMMANDCODE REPORT</div>
+					<div class="text-[#444]">2026-08-05</div>
+				</div>
+			</div>
+		</header>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="corner-box left-0 top-0 -translate-x-1/2 -translate-y-1/2"></div>
+			<div class="corner-box right-0 top-0 translate-x-1/2 -translate-y-1/2"></div>
+			<div class="grid gap-8 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+				<div>
+					<div class="mono mb-2 text-xs tracking-widest text-[#666]">// OVERALL</div>
+					<div class="text-6xl font-bold tracking-tight md:text-7xl">41</div>
+					<div class="mt-1 text-lg text-[#666]">/ 60</div>
+					<div class="mt-4 inline-flex border border-[#fbbf24]/30 bg-[#fbbf24]/10 px-3 py-1 text-sm text-[#fbbf24]">WATCH</div>
+				</div>
+				<div>
+					<div class="mono mb-3 text-xs tracking-widest text-[#666]">// TL;DR</div>
+					<p class="text-sm leading-6 text-[#a0a0a0]">A genuinely intentional product surface: custom tokens, a Space Grotesk / Inter / IBM Plex Mono type trio, a teal-and-mint accent that refuses the generic SaaS palette, consistent status semantics, and honest empty/loading/error states. The core task flow (import → configure → deliver) is complete and confirm-guarded.</p>
+					<p class="mt-4 text-sm leading-6 text-[#fbbf24]">Fix primary CTA contrast (white-on-mint ≈2:1, white-on-teal ≈3.7:1) and add keyboard paths to the clickable table rows before shipping. Then harden focus rings and modal focus management.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="mono mb-6 text-xs tracking-widest text-[#666]">// HEURISTIC SCORES</div>
+			<div class="overflow-x-auto">
+				<table class="w-full min-w-[720px] border-collapse text-sm">
+					<thead>
+						<tr class="border-b border-[#222226] text-left mono text-xs text-[#666]">
+							<th class="py-3 pr-4 font-normal">#</th>
+							<th class="py-3 pr-4 font-normal">HEURISTIC</th>
+							<th class="py-3 pr-4 font-normal">SCORE</th>
+							<th class="py-3 font-normal">KEY FINDING</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">1</td>
+							<td class="py-4 pr-4 text-[#fafafa]">Intentionality</td>
+							<td class="py-4 pr-4 text-[#fbbf24]">9/10</td>
+							<td class="py-4 text-[#a0a0a0]">Custom tokens, distinctive type trio, teal/mint accent; internal "VERTICAL N ·" labels leak into user-facing chrome.</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">2</td>
+							<td class="py-4 pr-4 text-[#fafafa]">Readability</td>
+							<td class="py-4 pr-4 text-[#fbbf24]">5/10</td>
+							<td class="py-4 text-[#a0a0a0]">White-on-mint (~2:1) and white-on-teal (~3.7:1) CTA labels fail contrast; heavy use of 11–12px mono text.</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">3</td>
+							<td class="py-4 pr-4 text-[#fafafa]">Usability</td>
+							<td class="py-4 pr-4 text-[#34d399]">8/10</td>
+							<td class="py-4 text-[#a0a0a0]">Import → configure → deliver path is complete, confirm-guarded, with empty states and remove/cancel undo paths.</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">4</td>
+							<td class="py-4 pr-4 text-[#fafafa]">Responsiveness</td>
+							<td class="py-4 pr-4 text-[#fbbf24]">6/10</td>
+							<td class="py-4 text-[#a0a0a0]">Tables scroll, drawer shell is solid; all inputs/selects sit at 13–14px, triggering iOS Safari zoom-on-focus.</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">5</td>
+							<td class="py-4 pr-4 text-[#fafafa]">Speed</td>
+							<td class="py-4 pr-4 text-[#34d399]">9/10</td>
+							<td class="py-4 text-[#a0a0a0]">Self-hosted fonts, server-component data flow, skeleton loading, transform/opacity-only animation.</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">6</td>
+							<td class="py-4 pr-4 text-[#fafafa]">Accessibility</td>
+							<td class="py-4 pr-4 text-[#ef4444]">4/10</td>
+							<td class="py-4 text-[#a0a0a0]">Clickable table rows have no keyboard path; modals lack focus trap/restore; outline-none + border-only focus indication.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="mono mb-6 text-xs tracking-widest text-[#666]">// COGNITIVE LOAD / RISK</div>
+			<div class="grid gap-6 md:grid-cols-2">
+				<div>
+					<div class="mb-3 text-xl font-semibold">Moderate — task flow intact, trust signals present</div>
+					<ul class="space-y-3 text-sm text-[#a0a0a0]">
+						<li><span class="mono mr-2 text-[#34d399]">PASS</span>Consistent status semantics: green = delivered/valid, red = failed, amber = pending/in-progress, grey = cancelled. Always text-backed, never color-only.</li>
+						<li><span class="mono mr-2 text-[#34d399]">PASS</span>Every list has an empty state that teaches the next action; destructive/irreversible actions route through confirm dialogs.</li>
+						<li><span class="mono mr-2 text-[#fbbf24]">WATCH</span>Tracker and run pages show RUNNING/PARTIALLY_COMPLETED only on manual Refresh; no polling, so "live" states go stale.</li>
+						<li><span class="mono mr-2 text-[#fbbf24]">WATCH</span>All form controls rely on outline-none + border-color change for focus; weak and indistinguishable to color-blind users.</li>
+						<li><span class="mono mr-2 text-[#ef4444]">FAIL</span>Core comparison tasks (open model detail, open run detail) are unreachable by keyboard.</li>
+					</ul>
+				</div>
+				<div>
+					<div class="mono mb-3 text-xs tracking-widest text-[#666]">// NEXT MODES</div>
+					<div class="flex flex-wrap gap-2">
+						<span class="border border-[#333] px-3 py-1 text-sm text-[#a0a0a0]">/design recolor</span>
+						<span class="border border-[#333] px-3 py-1 text-sm text-[#a0a0a0]">/design interaction</span>
+						<span class="border border-[#333] px-3 py-1 text-sm text-[#a0a0a0]">/design responsive</span>
+						<span class="border border-[#333] px-3 py-1 text-sm text-[#a0a0a0]">/design voice</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="mono mb-6 text-xs tracking-widest text-[#666]">// WHAT'S WORKING</div>
+			<div class="grid gap-4 md:grid-cols-3">
+				<article class="border border-[#1f1f24] p-4">
+					<h2 class="mb-2 text-sm font-semibold">A real design system</h2>
+					<p class="text-sm leading-6 text-[#a0a0a0]">Custom tokens in globals.css, Space Grotesk / Inter / IBM Plex Mono as a deliberate display-body-data trio, and shared primitives (PageHeader, InlineStatBar, ModalShell, ConfirmDialog) used consistently across all 15 routes.</p>
+				</article>
+				<article class="border border-[#1f1f24] p-4">
+					<h2 class="mb-2 text-sm font-semibold">Composition matches the work</h2>
+					<p class="text-sm leading-6 text-[#a0a0a0]">A compare/operate surface — sponsor-grouped tables with expandable rows, stat bars, progress bars, download actions. The shapes support the scanning the domain needs.</p>
+				</article>
+				<article class="border border-[#1f1f24] p-4">
+					<h2 class="mb-2 text-sm font-semibold">A responsive shell done right</h2>
+					<p class="text-sm leading-6 text-[#a0a0a0]">Fixed sidebar collapses, mobile drawer has focus management, escape-close, backdrop, body scroll lock; prefers-reduced-motion is respected globally.</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="mono mb-6 text-xs tracking-widest text-[#666]">// PRIORITY ISSUES</div>
+			<div class="space-y-5">
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#f43f5e]">P0</div>
+					<h2 class="mb-2 text-lg font-semibold">Primary CTA labels fail contrast</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">Every bg-accent button uses text-ink (white on #5dcaa5, ≈2:1); every bg-signal button uses white on #0e9488 (≈3.7:1). These are the main actions: Upload models, Generate now, Initiate delivery, Sign in, Create Sponsor, Get early access.</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Darken the label to the existing --on-signal ink (#062622) or deepen both roles toward a 4.5:1 pair. /design recolor.</div>
+				</article>
+
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#f43f5e]">P1</div>
+					<h2 class="mb-2 text-lg font-semibold">Clickable rows have no keyboard path</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">ModelsTable, DeliveryRunsList, and the sponsor-group rows are &lt;tr onClick&gt; with no tabIndex, role, or key handler.</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Make each row a real link or add tabIndex + role="link" + Enter/Space handling, or move the action to an accessible affordance. /design interaction.</div>
+				</article>
+
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#f43f5e]">P1</div>
+					<h2 class="mb-2 text-lg font-semibold">Modals have no focus management</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">ModalShell (ConfirmDialog, ModelDetailModal, ImportResultModal, sponsor forms) sets role="dialog" aria-modal and closes on Escape, but never moves focus in, traps it, or restores it to the trigger.</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Focus the dialog on open, trap Tab within it, restore focus to the opener on close. /design interaction.</div>
+				</article>
+
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#f43f5e]">P2</div>
+					<h2 class="mb-2 text-lg font-semibold">Focus indication is border-only</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">All inputs/selects (LoginForm, ModelsTable, SponsorsOverview, FileFormatConfigWizard, etc.) use outline-none with only focus:border-signal.</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Replace with a visible ring: focus-visible:ring-2 ring-signal ring-offset-2. /design interaction.</div>
+				</article>
+
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#f43f5e]">P2</div>
+					<h2 class="mb-2 text-lg font-semibold">Inputs below 16px trigger iOS zoom</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">Every text input and select across the app is text-sm (14px) or text-[13px], including login, search, and sponsor config forms.</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Set form controls to at least 16px on screens under 640px (text-base sm:text-sm pattern). /design responsive.</div>
+				</article>
+
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#f43f5e]">P2</div>
+					<h2 class="mb-2 text-lg font-semibold">Internal labels in user-facing chrome</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">Page breadcrumbs read "VERTICAL 1 · DATA IMPORTS", "VERTICAL 2 · SPONSOR & DELIVERY CONFIG", "VERTICAL 3 · DISTRIBUTION SERVICE".</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Replace with human section names (e.g. "DATA · MODELS"). /design voice.</div>
+				</article>
+			</div>
+		</section>
+
+		<footer class="mono py-8 text-center text-xs tracking-widest text-[#444]">
+			Generated with CommandCode - 2026-08-05
+		</footer>
+	</main>
+</body>
+</html>
