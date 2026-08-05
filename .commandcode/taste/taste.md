@@ -13,6 +13,7 @@ See [workflow/taste.md](workflow/taste.md)
 
 # error-handling
 - Never suppress or hide errors when data insertion fails; show errors directly to the user without making them "seamless". Confidence: 0.85
+- When a custom `ExceptionMiddleware` is registered, remove `app.UseDeveloperExceptionPage()` in Development — the developer exception page sits outermost in the pipeline and overrides the custom middleware's clean JSON error responses (e.g. a `ConflictException` that should return 409), swapping them for a 500 + stack trace. The custom JSON middleware is the authoritative handler; don't stack the dev exception page on top of it. Confidence: 0.82
 
 # ui
 - When building radio-button-style selection lists (e.g., payout options in a form), always render every option as an interactive, clickable element — never use a plain non-interactive `<div>` for a single option. Users need to positively confirm their selection before proceeding; auto-selecting or displaying without interaction leaves them unable to advance. Confidence: 0.80
@@ -66,6 +67,7 @@ See [nextjs/taste.md](nextjs/taste.md)
 # ef-migrations
 - When `dotnet ef migrations add` cannot run (e.g., design-time DbContext creation fails due to missing DI registrations or adapter config), write the migration class manually and update `AppDbContextModelSnapshot.cs` directly by removing the dropped entity blocks — do not leave the snapshot referencing deleted entities. Confidence: 0.80
 - When `dotnet ef database update` cannot run (container has no SDK, design-time DI resolution fails, etc.), fall back to applying migrations as raw DDL SQL (`ALTER TABLE … ADD COLUMN IF NOT EXISTS`, etc.) directly against the database via `psql`, and manually insert corresponding entries into `__EFMigrationsHistory` so the app's startup `MigrateAsync()` call doesn't attempt to re-apply them. Confidence: 0.75
+- When `dotnet ef database update` fails mid-migration because a schema change conflicts with existing data (e.g. a new unique index rejects rows that all share the same default value), don't just retry — backfill distinct values for the offending rows first, then apply the column/default-drop/index via raw SQL, and manually insert the `__EFMigrationsHistory` entry last so EF's startup `MigrateAsync()` doesn't re-attempt the failed migration. This is distinct from tooling-unavailable fallbacks: the blocker here is data, not the SDK. Confidence: 0.75
 - When deleting entity classes from the codebase, proactively update `AppDbContextModelSnapshot.cs` to remove the snapshot's entity configuration blocks for those entities — the user will notice if the migration/snapshot still references deleted types, even if the code compiles. Confidence: 0.75
 - After writing migration code, do not assume it was applied just because the app startup calls `MigrateAsync()`. Verify empirically by checking the actual running database — query table count, `__EFMigrationsHistory` entries, or table schemas — not just code analysis of migration files. Stale Docker layers or failed startup migrations can leave the DB out of sync with the code. Confidence: 0.80
 

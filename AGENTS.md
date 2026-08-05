@@ -5,19 +5,20 @@
 Model delivery tool for boutique SMA/model strategist firms distributing model portfolios to
 sponsor platforms (TAMPs), starting with SMArtX.
 
-See @PROJECT.md for the MVP scope (what to actually build first) and @PROJECT_FULL_SCOPE.md for
-the long-term target-state architecture (what NOT to build yet).
+See `docs/ARCHITECTURE.md` for the current implemented system (what is built and code-verified)
+and `docs/PROJECT.md` for the target-state platform architecture (what NOT to build yet — the
+next-gen platform is a future reference, not the MVP).
 
 ## Scope Discipline (read this before adding any feature)
 
 This is a solo, part-time (10-20 hr/week) build with no funding. The single biggest risk to this
 project is scope creep back toward the full enterprise doc before there are paying customers.
 
-- Default to the MVP scope in @PROJECT.md unless a specific paying customer has asked for
-  something beyond it.
-- If a task looks like it belongs to Phase 2/3 in @PROJECT_FULL_SCOPE.md (multi-sponsor,
-  compliance rule engine, dynamic models, corporate actions, SSO/RBAC, EMEA), stop and confirm
-  with me before implementing — don't build it just because it's documented.
+- Default to the smallest working version of any feature that matches the current implementation
+  in `docs/ARCHITECTURE.md` unless a specific paying customer has asked for something beyond it.
+- If a task belongs to the target-state `docs/PROJECT.md` (delivery runs, tracker state machine,
+  compliance rule engine, event store, dead letters, RBAC, EMEA, CRD adapters, corporate actions),
+  stop and confirm with me before implementing — don't build it just because it's documented.
 - Prefer the smallest working version of any feature over the "correct" enterprise version.
 
 ## Code Style Guidelines
@@ -35,15 +36,15 @@ project is scope creep back toward the full enterprise doc before there are payi
 
 ## Architecture Notes
 
-- Single Postgres database for MVP — no data warehouse, no separate analytics store until
-  Phase 2+ demands it (see @PROJECT_FULL_SCOPE.md Section 9.4)
+- Single Postgres database for MVP — no data warehouse, no separate analytics store until the
+  target state (see `docs/PROJECT.md`) demands it.
 - Delivery is file-generation-only for MVP — no SFTP, SMB, or API integration (including
   SMArtX). A sponsor is just a name + a file-format config. Do not add credential storage or
-  a delivery transport layer until Phase 2 (see @PROJECT.md Section 5)
+  a delivery transport layer until a paying customer asks for it.
 - Every file generation attempt (success or failure) must be logged to `delivery_log` — this is
   the core value proposition of the product, not an optional feature
 - Static models only for MVP — dynamic/rule-driven models are explicitly out of scope until
-  Phase 2 (see @PROJECT_FULL_SCOPE.md Section 3.3-3.4)
+  the target state (see `docs/PROJECT.md`)
 
 ## Common Workflows
 
