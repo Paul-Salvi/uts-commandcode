@@ -1,73 +1,50 @@
 # Checkup Report — Ledger (uts-ui)
 
-**Mode:** `/design checkup` · **Date:** 2026-08-05 · **Score: 41 / 60**
+**Mode:** `/design checkup` · **Date:** 2026-08-05 · **Score: 52 / 60**
 
-**Verdict:** WATCH — strong, coherent foundation with real product fidelity, but two classes of issues block a clean ship: primary-CTA contrast failures and keyboard gaps on the core table interactions.
+**Verdict:** HEALTHY — the interface has been through a full redesign and system passes since the original 41/60 checkup. The ledger/proof concept is coherent end to end, the contrast and keyboard gaps are closed, and the color/status/type systems are now owned by tokens. The remaining issues are contained: live states still need manual refresh, and a few one-off status/error spots bypass the new status tokens.
 
 ## TL;DR
 
-The app is a genuinely intentional product surface — custom tokens, a three-font data/display/body system, a teal-and-mint accent that refuses the generic SaaS palette, consistent status semantics, and honest empty/loading/error states. The single biggest visual defect is that every primary action button pairs white text with a mint (`--accent #5dcaa5`, ~2:1) or teal (`--signal #0e9488`, ~3.7:1) background — both fail WCAG AA for the 13–14px labels they carry. The second is that the comparison-heavy surfaces (model rows, run rows, sponsor group headers) are clickable `<tr>` elements with no keyboard path, so keyboard users cannot open a model detail or a run detail at all.
+Every critical issue from the first checkup is fixed. Primary CTAs now carry dark ink labels on green fills (AA/AAA). Keyboard users can open every model/run/sponsor detail and toggle every group. Modals trap and restore focus. All mobile inputs are ≥16px. The remaining watch items are a stale-data gap (runs/tracker update only on manual Refresh, which undercuts the "provably done" promise) and some residual hardcoded `emerald/red/amber` utility classes on inline messages and model-detail cards that haven't been migrated to the new status tokens.
 
 ## Heuristic Scores
 
 | # | Heuristic | Score | Key Finding |
 |---|---|---|---|
-| 1 | Intentionality | 9/10 | Custom tokens, distinctive type trio, teal/mint accent; internal "VERTICAL N ·" labels leak into user-facing chrome |
-| 2 | Readability | 5/10 | White-on-mint (~2:1) and white-on-teal (~3.7:1) CTA labels fail contrast; heavy use of 11–12px mono text |
-| 3 | Usability | 8/10 | Import → configure → deliver path is complete, confirm-guarded, with empty states and remove/cancel undo paths |
-| 4 | Responsiveness | 6/10 | Tables scroll, drawer shell is solid; all inputs/selects sit at 13–14px, triggering iOS Safari zoom-on-focus |
-| 5 | Speed | 9/10 | Self-hosted fonts, server-component data flow, skeleton loading, transform/opacity-only animation |
-| 6 | Accessibility | 4/10 | Clickable `<tr>` rows have no keyboard path; modals lack focus trap/restore; `outline-none` + border-only focus indication |
+| 1 | Intentionality | 10/10 | Ledger/proof concept is authored end to end: paper-and-ink, ruled tables, green-ink sidebar, semantic status tokens |
+| 2 | Readability | 9/10 | Ink text ~16:1, fog ~7:1, dark labels on all filled buttons; the new warm status chips hold ~4.5:1 |
+| 3 | Usability | 9/10 | Import → configure → deliver path complete, confirm-guarded, empty states teach, dashboard now shows recent runs |
+| 4 | Responsiveness | 9/10 | Tables scroll, drawer shell solid, all inputs ≥16px on mobile, safe-area handled, action bars wrap |
+| 5 | Speed | 9/10 | Self-hosted fonts, server-component data flow, skeletons, transform/opacity-only motion |
+| 6 | Accessibility | 6/10 | Keyboard rows, modal focus trap/restore, focus rings all present — but live status requires manual Refresh, and a few status spots still bypass the token system |
 
 ## Cognitive Load / Risk
 
-- **PASS** — Consistent status semantics: green = delivered/valid, red = failed, amber = pending/in-progress, grey = cancelled. Always text-backed, never color-only.
-- **PASS** — Every list surface has an empty state that teaches the next action, and destructive/irreversible actions route through confirm dialogs.
-- **WATCH** — Tracker and run pages show RUNNING/PARTIALLY_COMPLETED states only on manual Refresh; no polling, so "live" states go stale.
-- **WATCH** — All form controls rely on `outline-none` + border-color change for focus; no visible ring or offset, weak for keyboard users and indistinguishable to color-blind users.
-- **FAIL** — Core comparison tasks (open model detail, open run detail) are unreachable by keyboard.
+- **PASS** — One authored world: the dashboard, tables, sidebar, modals, and landing page all speak the ledger language. The color system is now token-owned (action, proof, and four status roles defined once).
+- **PASS** — Status semantics are consistent and text-backed: success/warning/danger/muted with the same meaning everywhere.
+- **WATCH** — Tracker and run pages still show RUNNING/PARTIAL only on manual Refresh; the "provably done" promise is undercut by stale live states.
+- **WATCH** — A handful of inline messages and the model-detail validity cards still use raw `emerald-*/red-*/amber-*` utilities instead of the `status-*` tokens — visually consistent, but not yet owned by the system.
 
 ## Next Modes
 
-- `/design recolor` — fix CTA contrast (darken accent, or swap label to the existing `--on-signal` ink)
-- `/design interaction` — keyboard row activation, modal focus trap, focus-visible rings
-- `/design responsive` — 16px inputs on narrow screens (iOS zoom)
-- `/design voice` — replace internal "VERTICAL N ·" breadcrumb labels
+- `/design surface` — migrate the remaining raw status utilities to the tokens, add polling/refresh to live run states
+- `/design finish` — final edge pass once polling lands
 
 ## What's Working
 
-- **A real design system.** Custom tokens in `globals.css`, Space Grotesk / Inter / IBM Plex Mono as a deliberate display-body-data trio, and shared primitives (`PageHeader`, `InlineStatBar`, `ModalShell`, `ConfirmDialog`) used consistently across all 15 routes.
-- **Composition matches the work.** This is a compare/operate surface — sponsor-grouped tables with expandable rows, stat bars, progress bars, and download actions. The shapes support the scanning the domain needs.
-- **A responsive shell done right.** Fixed sidebar collapses, mobile drawer has focus management, escape-close, backdrop, and body scroll lock; `prefers-reduced-motion` is respected globally.
+- **A real point of view.** The ruled account-book tables, warm paper, ink text, and green-ink sidebar tie the product to its "provably done" promise. It could not be reassigned to a random product.
+- **Token-owned color and type.** Action, proof, and four status roles are defined once in `:root`; Space Grotesk / Inter / Plex Mono with tabular-nums and one `data-label` voice.
+- **A hardened interaction layer.** Keyboard-activatable rows, modal focus trap + restore, visible focus rings, pressable buttons, mobile inputs ≥16px, and `prefers-reduced-motion` respected globally.
 
 ## Priority Issues
 
-### P0 — Primary CTA labels fail contrast
-- **Evidence:** Every `bg-accent` button uses `text-ink` (white on `#5dcaa5`, ≈2:1); every `bg-signal` button uses white on `#0e9488` (≈3.7:1). These are the main actions: Upload models, Generate now, Initiate delivery, Sign in, Create Sponsor, Get early access.
-- **Why it matters:** The most important action on every screen is the least legible one; 13–14px medium text at sub-4.5:1 fails WCAG AA and reads muddy on bright displays.
-- **FIX:** Darken the label to the existing `--on-signal` ink (`#062622`) or deepen both roles toward a 4.5:1 pair. `/design recolor`.
+### WATCH — Live states need manual Refresh
+- **Evidence:** `DeliveryTrackerClient` and `RunDetailClient` fetch on mount and on an explicit Refresh button; RUNNING/PARTIALLY_COMPLETED states go stale without user action.
+- **Why it matters:** The core promise is "provably done" — a run that sits at RUNNING until the operator clicks Refresh undercuts that.
+- **FIX:** Add a modest poll (or SSE later) on the tracker and run-detail pages, with the existing indeterminate progress sweep as the in-flight signal. Architecture + `/design surface`.
 
-### P1 — Clickable rows have no keyboard path
-- **Evidence:** `ModelsTable`, `DeliveryRunsList`, and the sponsor-group rows are `<tr onClick>` with no `tabIndex`, role, or key handler.
-- **Why it matters:** A keyboard user cannot open a model's positions/weight detail or a delivery run's progress — the two central comparison tasks of the product.
-- **FIX:** Make each row a real link or add `tabIndex={0}` + `role="link"` + Enter/Space handling, or move the action to an accessible affordance in the row. `/design interaction`.
-
-### P1 — Modals have no focus management
-- **Evidence:** `ModalShell` (used by `ConfirmDialog`, `ModelDetailModal`, `ImportResultModal`, sponsor forms) sets `role="dialog" aria-modal` and closes on Escape, but never moves focus in, traps it, or restores it to the trigger.
-- **Why it matters:** Screen-reader and keyboard users can tab behind the overlay; focus restoration is absent after close.
-- **FIX:** Focus the dialog on open, trap Tab within it, restore focus to the opener on close. `/design interaction`.
-
-### P2 — Focus indication is border-only
-- **Evidence:** All inputs/selects (`LoginForm`, `ModelsTable`, `SponsorsOverview`, `FileFormatConfigWizard`, etc.) use `outline-none` with only `focus:border-signal`.
-- **Why it matters:** A 1px border-color change is the entire focus signal — invisible at a glance, indistinguishable for color-blind users.
-- **FIX:** Replace with a visible ring: `focus-visible:ring-2 ring-signal ring-offset-2`. `/design interaction`.
-
-### P2 — Inputs below 16px trigger iOS zoom
-- **Evidence:** Every text input and select across the app is `text-sm` (14px) or `text-[13px]`, including login, search, and sponsor config forms.
-- **Why it matters:** On iOS Safari, focusing a sub-16px control auto-zooms the viewport and breaks layout mid-task.
-- **FIX:** Set form controls to at least 16px on screens under 640px (`text-base sm:text-sm` pattern). `/design responsive`.
-
-### P2 — Internal labels in user-facing chrome
-- **Evidence:** Page breadcrumbs read "VERTICAL 1 · DATA IMPORTS", "VERTICAL 2 · SPONSOR & DELIVERY CONFIG", "VERTICAL 3 · DISTRIBUTION SERVICE".
-- **Why it matters:** Internal vertical nomenclature is meaningless to the operator and undermines the otherwise tight, domain-accurate copy.
-- **FIX:** Replace with human section names (e.g. "DATA · MODELS"). `/design voice`.
+### WATCH — Residual raw status utilities bypass the tokens
+- **Evidence:** The new `status-success/warning/danger/muted` tokens cover the status-pill maps, but inline success/error banners (UploadForm, FileFormatConfigWizard, ImportResultModal, etc.) and the model-detail validity cards still use `bg-emerald-50 text-emerald-700`, `bg-red-50 text-red-800`, `bg-amber-50` directly.
+- **Why it matters:** The colors look consistent today, but the system is only partially owned — a future status-color shift means hunting down raw utilities again.
+- **FIX:** Migrate the remaining inline status surfaces to the `status-*` tokens. `/design surface`.
