@@ -82,12 +82,7 @@ See [docker/taste.md](docker/taste.md)
 - Notification messages must be enriched with real contextual names and amounts — never generic status strings like "Pay-in completed". Include payer names, employee names, agent names, and agency names depending on context and role. Different roles should see role-appropriate context (e.g., admin sees agency name + agent name, employees see their own name). Confidence: 0.85
 
 # security
-- For public-facing payment/checkout pages that handle money, proactively implement layered security without being asked: short-lived session tokens (30-min TTL with countdown display), idempotency keys to prevent double-charge, per-endpoint rate limiting (stricter limits on mutation endpoints like payment start), origin/referer header validation, signed input tokens, HSTS/CSP/X-Frame-Options headers, and webhook signature verification for provider callbacks. Treat these as defaults, not negotiable features. Confidence: 0.85
-- Origin/referer header validation should be permissive when headers are absent: only reject requests where the Origin or Referer header IS present but doesn't match the allowed origins. Server-to-server calls (Next.js server actions, cURL, mobile SDKs, webhook clients) do not send browser origin headers and must be allowed through. A validation that rejects requests with no origin/referer header will silently break all server-side consumers. Confidence: 0.85
-- When real credentials are found committed to git (e.g., a DB password in appsettings.json), treat it as a blocking issue: scrub the values to placeholders pointing at env vars/user-secrets so the code is safe going forward. Do NOT purge git history or rotate the secret autonomously — flag rotation and history cleanup as the user's decision. Confidence: 0.65
-- Login/auth endpoints must return a single generic error for both unknown email and wrong password (e.g., "Invalid email or password") so the response never reveals whether an account exists — no user enumeration. Confidence: 0.8
-- Sensitive integration credentials (e.g., sponsor platform API keys/secrets) must be encrypted at rest: AES-256-GCM with the key from configuration/env, nonce prepended to the ciphertext, stored base64; API responses must never return the credentials (only a `hasCredentials` flag). Decryption failure (e.g., rotated key) should surface a clear, actionable error. Confidence: 0.7
-
+See [security/taste.md](security/taste.md)
 # implementation-pattern
 See [implementation-pattern/taste.md](implementation-pattern/taste.md)
 # webhooks
@@ -130,6 +125,7 @@ See [implementation-pattern/taste.md](implementation-pattern/taste.md)
 - When a financial journal/ledger entry references an underlying business record (pay-in record, payout request) but stores no actor or status, resolve `Username` and `Status` server-side by joining the entry's `ReferenceId`/`ReferenceType` to the referenced record (payer name for pay-ins, employee username for payouts) rather than leaving the frontend to guess or show blanks. Confidence: 0.75
 
 # communication
+- The user communicates failures/status by sending screenshots with minimal text (e.g., a Telegram chat screenshot + "still failed") rather than describing the error in words — treat the image as the source of truth for the exact error text and status details and read it (vision) before investigating; do not rely on the terse text alone. Confidence: 0.6
 - When diagnosing a UI bug category (e.g., "unnecessary scroll", layout issues), present findings as a structured report with: numbered findings tables (Page/Component, Viewport, Scroll Type, Root Cause, Severity, Fix Direction), an "Uncertain / Needs a Decision" section for ambiguous items, and a severity-priority summary — then let the user confirm before implementing fixes. Confidence: 0.80
 
 # docs

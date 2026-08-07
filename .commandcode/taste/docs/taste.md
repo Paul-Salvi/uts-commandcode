@@ -1,4 +1,5 @@
 # docs
+- Tools that capture sensitive content (full tool inputs/results, command lines, file contents) should document a Data note in their README: treat the log as sensitive, keep it git-ignored, keep the server bound to localhost only, and state that events are posted unauthenticated. Confidence: 0.65
 - Marketing/landing pages (e.g., public homepage, sign-up page) should use a light theme (white background, emerald green accent `#2F8F5B`/`#1a6d3b`, dark text on white) to match conventional SaaS landing page aesthetics — not the dark palette used in the operations console. Confidence: 0.80
 - Marketing landing pages for game room agency owners should lead with the "all-in-one operations console" angle — managing players, payouts, payment pages, and wallet in one place — rather than leading with a single feature or technical differentiator. Confidence: 0.75
 - Primary call-to-action on marketing/landing pages should be a Telegram group invite link for prospects to get set up, rather than a sign-up form, email capture, or demo scheduling. Confidence: 0.80

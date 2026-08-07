@@ -116,6 +116,8 @@
 
 # data-tables
 - When a table lists rows that share a natural parent entity (e.g., delivery runs grouped by sponsor, tracker rows grouped by sponsor, deliveries grouped by sponsor), ALWAYS group the table by that parent with clickable, collapsible expandable rows: a full-width group header row (chevron, group name/code, per-group counts like "3 models · 2 pending"), all groups expanded by default so the view isn't empty on load, with selection/bulk actions still operating on the flat row set. Table grouping/enhancement is a first-class UX improvement, not a nice-to-have — apply it automatically in all future table work. Confidence: 0.9
+- Dashboard summary stat tiles for key metrics (errors, tool calls, tokens, telegram msgs) should be clickable links that navigate to a dedicated detail/insight page per metric (separate pages, not inline panels or pre-filtered feeds); only tiles with meaningful breakdowns get detail views — simple counters (active sessions, events today) stay plain and non-clickable. Confidence: 0.7
+- Dashboard activity/error metric tiles (Errors, Sub-agents) should be today-scoped counters that reset at midnight — consistent with an "Events today" counter — not all-time totals. When asked what these tiles should represent, the user explicitly chose "Today only" so the numbers feel live instead of looking stuck; cumulative metrics (tool calls, tokens, telegram msgs) stay all-time totals. Confidence: 0.6
 - For time-series/versioned data (e.g., model snapshot history), display a single pivot table with versions as columns and a final Δ (total drift) column (▲ green / ▼ red / neutral 0.00), rather than per-version cards — symbols as rows, weights per version as cells, muted "—" for absent symbols. Confidence: 0.55
 
 # search
