@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tokens — Command Code Monitor</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">≈</span>
+      <h1>Tokens used</h1>
+    </div>
+    <nav class="topnav">
+      <a class="btn-ghost" href="/">← Dashboard</a>
+    </nav>
+  </header>
+  <main>
+    <section class="metric-summary" id="summary"></section>
+    <section class="metric-card">
+      <h2 class="metric-title">By model</h2>
+      <table class="metric-table" id="byModel"><tbody></tbody></table>
+    </section>
+    <section class="metric-card">
+      <h2 class="metric-title">By session</h2>
+      <table class="metric-table" id="bySession"><tbody></tbody></table>
+    </section>
+  </main>
+  <script src="/metrics/tokens.js"></script>
+</body>
+</html>

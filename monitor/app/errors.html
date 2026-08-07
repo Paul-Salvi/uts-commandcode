@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Errors — Command Code Monitor</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">⚠</span>
+      <h1>Errors</h1>
+    </div>
+    <nav class="topnav">
+      <a class="btn-ghost" href="/">← Dashboard</a>
+    </nav>
+  </header>
+  <main>
+    <section class="metric-summary" id="summary"></section>
+    <section class="metric-cols">
+      <div class="metric-card">
+        <h2 class="metric-title">By tool</h2>
+        <table class="metric-table" id="byTool"><tbody></tbody></table>
+      </div>
+      <div class="metric-card">
+        <h2 class="metric-title">By session</h2>
+        <table class="metric-table" id="bySession"><tbody></tbody></table>
+      </div>
+    </section>
+    <section class="metric-card">
+      <h2 class="metric-title">Recent errors</h2>
+      <div id="recent" class="metric-list"></div>
+    </section>
+  </main>
+  <script src="/metrics/errors.js"></script>
+</body>
+</html>

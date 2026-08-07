@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Command Code Activity Monitor</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">◉</span>
+      <h1>Command Code Activity Monitor</h1>
+    </div>
+    <nav class="topnav">
+      <a class="btn-ghost" href="/telegram">Telegram</a>
+    </nav>
+    <div class="conn" id="conn">
+      <span class="dot" id="connDot"></span>
+      <span id="connText">connecting…</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- summary tiles -->
+    <section class="tiles" id="tiles">
+      <div class="tile"><div class="tile-label">Active sessions</div><div class="tile-value" id="t-active">–</div></div>
+      <div class="tile"><div class="tile-label">Tool calls</div><div class="tile-value" id="t-tools"><a href="/metrics/tools">–</a></div></div>
+      <div class="tile"><div class="tile-label">Errors</div><div class="tile-value" id="t-errors"><a href="/metrics/errors">–</a></div></div>
+      <div class="tile"><div class="tile-label">Sub-agents</div><div class="tile-value" id="t-subagents">–</div></div>
+      <div class="tile"><div class="tile-label">Tokens used</div><div class="tile-value" id="t-tokens"><a href="/metrics/tokens">–</a></div></div>
+      <div class="tile"><div class="tile-label">Events today</div><div class="tile-value" id="t-today">–</div></div>
+      <div class="tile"><div class="tile-label">Telegram msgs</div><div class="tile-value" id="t-telegram"><a href="/telegram">–</a></div></div>
+      <div class="tile"><div class="tile-label">Telegram running</div><div class="tile-value" id="t-telegram-running">–</div></div>
+    </section>
+
+    <!-- filters -->
+    <section class="filters">
+      <label class="filter-group">
+        <span>Session</span>
+        <select id="sessionFilter"><option value="">All sessions</option></select>
+      </label>
+      <div class="filter-group">
+        <span>Event types</span>
+        <div class="checkboxes" id="typeFilters"></div>
+      </div>
+      <button id="clearFilters" class="btn-ghost" type="button">Clear filters</button>
+    </section>
+
+    <!-- live feed -->
+    <section class="feed-wrap">
+      <div class="feed-head">
+        <span class="feed-title">Live activity</span>
+        <span class="feed-count" id="feedCount"></span>
+      </div>
+      <div class="feed" id="feed"></div>
+    </section>
+
+    <!-- telegram bridge -->
+    <section class="tg-wrap" id="tgWrap">
+      <div class="feed-head tg-head">
+        <span class="feed-title">Telegram bridge</span>
+        <span class="feed-count" id="tgCount"></span>
+        <button id="tgToggle" class="btn-ghost" type="button">Collapse</button>
+      </div>
+      <div id="tgSection">
+        <div class="tg-list" id="tgList"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Telegram — Command Code Monitor</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">✆</span>
+      <h1>Telegram conversations</h1>
+    </div>
+    <nav class="topnav">
+      <a class="btn-ghost" href="/">Dashboard</a>
+    </nav>
+  </header>
+
+  <!-- login view -->
+  <div id="loginView" style="display:none">
+    <div class="login-wrap">
+      <p class="login-hint">Enter the page token to view conversations.</p>
+      <form id="loginForm" class="login-form">
+        <input type="password" id="tokenInput" placeholder="token" autocomplete="off" />
+        <button class="btn-ghost" type="submit">Unlock</button>
+      </form>
+      <p id="loginError" class="login-error" style="display:none">Wrong token.</p>
+    </div>
+  </div>
+
+  <!-- app view -->
+  <div id="appView" style="display:none">
+    <main>
+      <div id="threads" class="tg-page"></div>
+      <div class="empty" id="emptyThreads" style="display:none">
+        No Telegram activity yet — messages sent to the bridge will appear here.
+      </div>
+    </main>
+  </div>
+
+  <script src="/telegram.js"></script>
+</body>
+</html>
